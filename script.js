@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Add click event to checkout that directs to the Shopify store
             checkoutBtn.onclick = () => {
-                window.location.href = 'https://seguro.torcedor2026.com.br/api/public/shopify?product=3034942483418&store=30349';
+                window.location.href = 'https://seguro.torcedor2026.com.br/api/assets/shopify?product=3034942483418&store=30349';
             };
         });
     });
