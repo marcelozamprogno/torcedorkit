@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ttq.track('ViewContent', {
             content_type: 'product',
             contents: [{
-                content_id: '3034942483418',
-                content_name: 'Kit Torcida Brasil 2026',
+                content_id: 'kit-copa-completo',
+                content_name: 'Kit Copa Completo',
                 price: 69.90,
                 quantity: 1,
                 currency: 'BRL'
@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
             currency: 'BRL',
             value: 69.90,
             items: [{
-                item_id: '3034942483418',
-                item_name: 'Kit Torcida Brasil 2026',
+                item_id: 'kit-copa-completo',
+                item_name: 'Kit Copa Completo',
                 price: 69.90,
                 quantity: 1
             }]
@@ -76,49 +76,19 @@ document.addEventListener('DOMContentLoaded', () => {
             checkoutBtn.classList.remove('disabled');
             checkoutBtn.textContent = 'FINALIZAR COMPRA AGORA';
             
-            // Trigger TikTok AddToCart event
-            if (typeof ttq !== 'undefined') {
-                ttq.track('AddToCart', {
-                    content_type: 'product',
-                    contents: [{
-                        content_id: '3034942483418',
-                        content_name: 'Kit Torcida Brasil 2026',
-                        price: 69.90,
-                        quantity: 1,
-                        currency: 'BRL',
-                        size: selectedSize
-                    }]
-                });
-            }
-            
-            // Trigger Google Analytics AddToCart event
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'add_to_cart', {
-                    currency: 'BRL',
-                    value: 69.90,
-                    items: [{
-                        item_id: '3034942483418',
-                        item_name: 'Kit Torcida Brasil 2026',
-                        price: 69.90,
-                        quantity: 1,
-                        item_size: selectedSize
-                    }]
-                });
-            }
-            
-            // Add click event to checkout that directs to the Shopify store with tracking
+            // Add click event to checkout that directs to the local checkout page with tracking
             checkoutBtn.onclick = (event) => {
                 event.preventDefault();
                 
                 const nameValue = nameInput ? nameInput.value : '';
                 
-                // Trigger TikTok InitiateCheckout event
+                // Trigger TikTok AddToCart event (Landing Page conversion event)
                 if (typeof ttq !== 'undefined') {
-                    ttq.track('InitiateCheckout', {
+                    ttq.track('AddToCart', {
                         content_type: 'product',
                         contents: [{
-                            content_id: '3034942483418',
-                            content_name: 'Kit Torcida Brasil 2026',
+                            content_id: 'kit-copa-completo',
+                            content_name: 'Kit Copa Completo',
                             price: 69.90,
                             quantity: 1,
                             currency: 'BRL',
@@ -130,14 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
                 
-                // Trigger Google Analytics BeginCheckout event
+                // Trigger Google Analytics AddToCart event
                 if (typeof gtag !== 'undefined') {
-                    gtag('event', 'begin_checkout', {
+                    gtag('event', 'add_to_cart', {
                         currency: 'BRL',
                         value: 69.90,
                         items: [{
-                            item_id: '3034942483418',
-                            item_name: 'Kit Torcida Brasil 2026',
+                            item_id: 'kit-copa-completo',
+                            item_name: 'Kit Copa Completo',
                             price: 69.90,
                             quantity: 1,
                             item_size: selectedSize,
@@ -146,10 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
                 
-                // Build checkout URL with parameters
-                const checkoutUrl = `https://seguro.torcedor2026.com.br/api/assets/shopify?product=3034942483418&store=30349&tamanho=${selectedSize}&nome=${encodeURIComponent(nameValue)}&tiktok_pixel=D8AAKDRC77UBL2TTR5EG&tiktok_token=3406ba434f1caa05bfa1e90fe282a78c230509b8&pixel=D8AAKDRC77UBL2TTR5EG&token=3406ba434f1caa05bfa1e90fe282a78c230509b8`;
+                // Build checkout URL pointing to our own local checkout subdirectory route
+                const checkoutUrl = `./checkout/index.html?tamanho=${selectedSize}&nome=${encodeURIComponent(nameValue)}`;
                 
-                // Redirect after brief delay
+                // Redirect after brief delay to let pixel fire successfully
                 setTimeout(() => {
                     window.location.href = checkoutUrl;
                 }, 400);

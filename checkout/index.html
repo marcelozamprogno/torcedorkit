@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Kit Copa Completo</title>
+    <meta name="description" content="Finalize sua compra do Kit Copa Completo de forma rápida, segura e com pagamento fácil via PIX.">
+    <link href="../assets/favicon.ico" rel="icon" type="image/x-icon">
+
+    <!-- Google Fonts (Outfit & Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="checkout.css">
+
+    <!-- TikTok Pixel Code Start -->
+    <script>
+    !function (w, d, t) {
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+    var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+    ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+
+      ttq.load('D8AAKDRC77UBL2TTR5EG');
+      ttq.page();
+    }(window, document, 'ttq');
+    </script>
+    <!-- TikTok Pixel Code End -->
+</head>
+<body>
+
+    <!-- Top Scarcity Bar -->
+    <div class="top-scarcity-bar" id="scarcity-bar-text">
+        ⚡ POUCAS UNIDADES DISPONÍVEIS PARA ENVIO IMEDIATO!
+    </div>
+
+    <!-- Header Section -->
+    <header class="checkout-header">
+        <div class="container flex-header">
+            <div class="logo-area">
+                <span class="logo-highlight">🏆 Torcedor</span>Kit
+            </div>
+            <div class="header-secure">
+                <svg class="secure-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span>Ambiente 100% Seguro</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Steps -->
+    <div class="progress-container">
+        <div class="container">
+            <div class="steps-wrapper">
+                <div class="step active" id="step-tab-1">
+                    <span class="step-num">1</span>
+                    <span class="step-label">Dados Pessoais</span>
+                </div>
+                <div class="step-line" id="step-line-1"></div>
+                <div class="step" id="step-tab-2">
+                    <span class="step-num">2</span>
+                    <span class="step-label">Entrega</span>
+                </div>
+                <div class="step-line" id="step-line-2"></div>
+                <div class="step" id="step-tab-3">
+                    <span class="step-num">3</span>
+                    <span class="step-label">Pagamento</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="checkout-main">
+        <div class="container main-grid">
+            
+            <!-- Left Side: Forms -->
+            <div class="checkout-forms">
+                <form id="checkout-form" novalidate>
+                    
+                    <!-- Section 1: Personal Data -->
+                    <div class="form-section active-section" id="section-personal">
+                        <div class="section-title">
+                            <div class="title-icon bg-blue">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <h3>1. Identificação</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="form-group">
+                                <label for="full-name" class="form-label">Nome Completo</label>
+                                <input type="text" id="full-name" class="form-input" placeholder="Ex: João Silva Santos" required>
+                                <span class="field-error" id="error-full-name"></span>
+                            </div>
+                            
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label for="cpf" class="form-label">CPF</label>
+                                    <input type="text" id="cpf" class="form-input" placeholder="000.000.000-00" inputmode="numeric" required>
+                                    <span class="field-error" id="error-cpf"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">WhatsApp / Celular</label>
+                                    <input type="tel" id="phone" class="form-input" placeholder="(00) 99999-9999" inputmode="tel" required>
+                                    <span class="field-error" id="error-phone"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">E-mail</label>
+                                <input type="email" id="email" class="form-input" placeholder="Ex: joao@email.com" required>
+                                <span class="field-error" id="error-email"></span>
+                                <p class="input-helper">Você receberá a confirmação do pagamento e código de rastreamento neste e-mail.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Address Data -->
+                    <div class="form-section active-section" id="section-address">
+                        <div class="section-title">
+                            <div class="title-icon bg-green">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                            </div>
+                            <h3>2. Endereço de Entrega</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label for="cep" class="form-label">CEP</label>
+                                    <div class="cep-input-wrapper">
+                                        <input type="text" id="cep" class="form-input" placeholder="00000-000" inputmode="numeric" required>
+                                        <div class="cep-spinner" id="cep-spinner"></div>
+                                    </div>
+                                    <span class="field-error" id="error-cep"></span>
+                                </div>
+                                <div class="form-group" style="align-self: flex-end;">
+                                    <a href="https://buscacepinter.correios.com.br/app/endereco/index.php" target="_blank" rel="noopener" class="cep-link">
+                                        Não sei meu CEP 🔍
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="street" class="form-label">Endereço / Rua</label>
+                                <input type="text" id="street" class="form-input" placeholder="Avenida Brasil" required>
+                                <span class="field-error" id="error-street"></span>
+                            </div>
+
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label for="number" class="form-label">Número</label>
+                                    <input type="text" id="number" class="form-input" placeholder="123" required>
+                                    <span class="field-error" id="error-number"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="complement" class="form-label">Complemento</label>
+                                    <input type="text" id="complement" class="form-input" placeholder="Ap 42, Bloco B (Opcional)">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="neighborhood" class="form-label">Bairro</label>
+                                <input type="text" id="neighborhood" class="form-input" placeholder="Centro" required>
+                                <span class="field-error" id="error-neighborhood"></span>
+                            </div>
+
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label for="city" class="form-label">Cidade</label>
+                                    <input type="text" id="city" class="form-input" placeholder="São Paulo" required>
+                                    <span class="field-error" id="error-city"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="state" class="form-label">Estado</label>
+                                    <input type="text" id="state" class="form-input" placeholder="SP" maxlength="2" required>
+                                    <span class="field-error" id="error-state"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Shipping Choice -->
+                    <div class="form-section active-section" id="section-shipping">
+                        <div class="section-title">
+                            <div class="title-icon bg-yellow">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="3" width="15" height="13"></rect>
+                                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                </svg>
+                            </div>
+                            <h3>3. Método de Envio</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="shipping-options">
+                                
+                                <!-- Free Shipping Card -->
+                                <div class="shipping-card active" id="shipping-free">
+                                    <div class="ship-details">
+                                        <div class="ship-radio-title">
+                                            <span class="custom-radio active"></span>
+                                            <div>
+                                                <h4 class="ship-title">Entrega Econômica</h4>
+                                                <p class="ship-days" id="free-days-text">8 a 15 dias úteis</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ship-price free-text">Grátis</div>
+                                </div>
+
+                                <!-- Fast Shipping Card -->
+                                <div class="shipping-card" id="shipping-fast">
+                                    <div class="ship-details">
+                                        <div class="ship-radio-title">
+                                            <span class="custom-radio"></span>
+                                            <div>
+                                                <div class="ship-title-badge">
+                                                    <h4 class="ship-title">Receba antes dos jogos</h4>
+                                                    <span class="ship-badge">Receba antes ⚡</span>
+                                                </div>
+                                                <p class="ship-days" id="fast-days-text">4 a 10 dias úteis</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ship-price" id="fast-price-text">R$ 19,90</div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 4: Payment -->
+                    <div class="form-section active-section" id="section-payment">
+                        <div class="section-title">
+                            <div class="title-icon bg-gold">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
+                                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                                </svg>
+                            </div>
+                            <h3>4. Forma de Pagamento</h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="payment-box">
+                                <div class="payment-option active" id="payment-pix">
+                                    <div class="pay-radio-title">
+                                        <span class="custom-radio active"></span>
+                                        <div class="pay-logo-group">
+                                            <!-- Simple Custom SVG PIX Logo -->
+                                            <div class="pix-logo-badge">
+                                                <svg class="pix-svg-icon" viewBox="0 0 100 100">
+                                                    <path d="M50 5 L95 50 L50 95 L5 50 Z" fill="none" stroke="currentColor" stroke-width="8"></path>
+                                                    <path d="M50 20 L80 50 L50 80 L20 50 Z" fill="currentColor"></path>
+                                                </svg>
+                                                <span class="pix-text">PIX</span>
+                                            </div>
+                                            <div>
+                                                <h4 class="pay-title">Aprovação Rápida e Segura</h4>
+                                                <p class="pay-desc">Liberação imediata do pedido e 5% extra de desconto</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="pix-instructions-card">
+                                    <ul class="pix-bullet-list">
+                                        <li>O código Copia e Cola / QR Code será gerado após clicar no botão.</li>
+                                        <li>Pague de forma rápida e segura no aplicativo do seu banco.</li>
+                                        <li>Você receberá a confirmação de forma imediata por e-mail.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Area -->
+                    <div class="checkout-submit-area">
+                        <button type="submit" class="btn-checkout-submit" id="submit-btn-checkout">
+                            <span>FINALIZAR COMPRA VIA PIX</span>
+                            <svg class="submit-btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+                        
+                        <div class="secure-footer-badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span>Ambiente criptografado SSL e certificado seguro</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Right Side: Order Summary -->
+            <div class="checkout-summary">
+                <div class="summary-card sticky-summary">
+                    <h3 class="summary-title">Resumo do Pedido</h3>
+                    
+                    <div class="summary-product">
+                        <div class="summary-prod-img-wrapper">
+                            <img src="../assets/imagem-da-hero.webp" alt="Kit Copa Completo" id="summary-prod-image">
+                        </div>
+                        <div class="summary-prod-details">
+                            <h4 id="summary-prod-name">Kit Copa Completo</h4>
+                            <p class="summary-prod-qty">Quantidade: 1</p>
+                            
+                            <!-- Personalization Details -->
+                            <div class="personalization-summary-box" id="personalization-box">
+                                <div class="pers-item" id="pers-size-row">
+                                    <span>Tamanho:</span>
+                                    <strong id="summary-size">Não selecionado</strong>
+                                </div>
+                                <div class="pers-item" id="pers-name-row">
+                                    <span>Nome Camisa:</span>
+                                    <strong id="summary-name">Sem personalização</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="summary-prod-price" id="summary-prod-price">R$ 69,90</div>
+                    </div>
+                    
+                    <div class="summary-divider"></div>
+                    
+                    <div class="summary-scarcity">
+                        <span class="scarcity-fire-icon">🔥</span>
+                        <span id="summary-scarcity-text">Alta procura! Poucos kits neste lote com este preço.</span>
+                    </div>
+
+                    <div class="summary-divider"></div>
+                    
+                    <!-- Pricing Table -->
+                    <div class="price-table">
+                        <div class="price-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal-val">R$ 69,90</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Envio / Frete</span>
+                            <span id="shipping-val" class="green-text">Grátis</span>
+                        </div>
+                        <div class="price-row total-row">
+                            <span>Total Final</span>
+                            <span id="total-val">R$ 69,90</span>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-divider"></div>
+
+                    <!-- Trust Checklist -->
+                    <div class="trust-checklist">
+                        <div class="checklist-item">
+                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span>Garantia de Satisfação de 7 dias</span>
+                        </div>
+                        <div class="checklist-item">
+                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span>Suporte humanizado via WhatsApp</span>
+                        </div>
+                        <div class="checklist-item">
+                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span>Código de rastreamento enviado via e-mail</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Brazilian Pride Badge -->
+                    <div class="copa-pride-card">
+                        <div class="pride-icon">🏆</div>
+                        <div>
+                            <h5 class="pride-title">Kit Torcida do Brasil</h5>
+                            <p class="pride-desc">Vista a camisa, reúna os amigos e vibre pelo Hexa com conforto!</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Payment Loading Overlay -->
+    <div class="payment-overlay" id="payment-overlay">
+        <div class="overlay-card">
+            <div class="payment-loader-spinner"></div>
+            <h3 class="overlay-title" id="overlay-status-title">Gerando seu pagamento PIX...</h3>
+            <p class="overlay-subtitle">Por favor, não feche esta janela. Estamos configurando sua transação segura com o banco.</p>
+            
+            <!-- Success Simulated Area -->
+            <div class="pix-mock-success" id="pix-mock-success" style="display: none;">
+                <div class="mock-success-icon">✓</div>
+                <h4 class="mock-success-title">PIX Gerado com Sucesso!</h4>
+                <p class="mock-success-desc">Use o código abaixo no aplicativo do seu banco na opção <strong>PIX Copia e Cola</strong>.</p>
+                
+                <div class="pix-qrcode-simulated">
+                    <!-- Simple PIX Simulated Grid QR Code visual -->
+                    <div class="simulated-qr">
+                        <svg class="qr-svg" viewBox="0 0 100 100">
+                            <rect x="10" y="10" width="30" height="30" fill="currentColor"></rect>
+                            <rect x="60" y="10" width="30" height="30" fill="currentColor"></rect>
+                            <rect x="10" y="60" width="30" height="30" fill="currentColor"></rect>
+                            <rect x="20" y="20" width="10" height="10" fill="white"></rect>
+                            <rect x="70" y="20" width="10" height="10" fill="white"></rect>
+                            <rect x="20" y="70" width="10" height="10" fill="white"></rect>
+                            <rect x="45" y="45" width="10" height="10" fill="currentColor"></rect>
+                            <rect x="65" y="65" width="15" height="15" fill="currentColor"></rect>
+                            <rect x="80" y="80" width="10" height="10" fill="currentColor"></rect>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="pix-copia-cola-box">
+                    <input type="text" class="pix-code-input" id="pix-code-field" value="00020101021226830014br.gov.bcb.pix2561api.invictuspay.com.br/v2/cob/D8AAKDRC77UBL2TTR5EG3406ba434f1caa05bfa1e90fe28" readonly>
+                    <button class="pix-copy-btn" id="pix-copy-btn">COPIAR CÓDIGO</button>
+                </div>
+                
+                <div class="pix-timer">Código válido por: <strong id="pix-timer-val">15:00</strong></div>
+                
+                <div class="mock-warning-box">
+                    💡 <strong>Dica:</strong> Após realizar o pagamento do PIX, o sistema identificará a aprovação e enviará um e-mail de confirmação automaticamente.
+                </div>
+                
+                <button class="btn-checkout-close" id="overlay-close-btn">FECHAR E VOLTAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disk Footer -->
+    <footer class="checkout-footer">
+        <div class="container text-center">
+            <p>Kit Torcedor COMERCIO E BRINDES LTDA &middot; CNPJ: 63.438.009/0001-07</p>
+            <p>&copy; 2026 Kit Torcedor 2026 &middot; Todos os direitos reservados. Compra segura protegida por criptografia SSL.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="checkout.js"></script>
+</body>
+</html>
