@@ -439,6 +439,23 @@
                 
                 <button class="btn-checkout-close" id="overlay-close-btn">FECHAR E VOLTAR</button>
             </div>
+
+            <!-- Error Contingency Area (Plan B) -->
+            <div class="pix-mock-success" id="pix-mock-error" style="display: none;">
+                <div class="mock-success-icon" style="background-color: var(--color-error); box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);">!</div>
+                <h4 class="mock-success-title" style="color: var(--color-error);">Erro ao Gerar o PIX</h4>
+                <p class="mock-success-desc" id="pix-error-desc" style="font-size:0.9rem; margin-bottom:15px; color:#475569;">Não foi possível gerar o PIX.</p>
+                
+                <div class="mock-warning-box" style="border-color: rgba(239, 68, 68, 0.15); background-color: rgba(239, 68, 68, 0.05); color: var(--color-error); margin-bottom: 20px;">
+                    ⚠️ Não conseguimos gerar o PIX automaticamente. Você pode finalizar seu pedido com total segurança em nosso checkout oficial clicando no botão abaixo.
+                </div>
+                
+                <a href="https://go.invictuspay.app.br/mpljoroel6" target="_blank" class="btn-checkout-submit" style="text-decoration:none; display:flex; align-items:center; justify-content:center; margin-bottom:15px; background: linear-gradient(135deg, #009739 0%, #007236 100%); color:#fff; box-shadow: 0 6px 20px rgba(0, 151, 57, 0.3);">
+                    FINALIZAR NO CHECKOUT SEGURO 🛡️
+                </a>
+                
+                <button class="btn-checkout-close" id="overlay-error-close-btn" style="background-color:#64748b; width:100%;">VOLTAR AO FORMULÁRIO</button>
+            </div>
         </div>
     </div>
 

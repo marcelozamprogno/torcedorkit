@@ -116,8 +116,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
                 
-                // Build checkout URL pointing to our own local checkout subdirectory route
-                const checkoutUrl = `./checkout/index.html?tamanho=${selectedSize}&nome=${encodeURIComponent(nameValue)}`;
+                // Build checkout URL pointing to our own local checkout subdirectory route, preserving UTMs
+                const urlParams = new URLSearchParams(window.location.search);
+                const checkoutUrlParams = new URLSearchParams({
+                    tamanho: selectedSize,
+                    nome: nameValue
+                });
+                const utmParamsList = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'src'];
+                utmParamsList.forEach(param => {
+                    if (urlParams.has(param)) {
+                        checkoutUrlParams.set(param, urlParams.get(param));
+                    }
+                });
+                const checkoutUrl = `./checkout/index.html?${checkoutUrlParams.toString()}`;
                 
                 // Redirect after brief delay to let pixel fire successfully
                 setTimeout(() => {

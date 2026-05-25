@@ -1,6 +1,6 @@
 /**
  * Custom Checkout Controller - Copa 2026 Theme
- * Fully modular, organized, and optimized for maximum conversions.
+ * Real-time integration with Invictus Pay API via secure Serverless backend.
  */
 
 // 1. Centralized Checkout Configuration
@@ -21,8 +21,9 @@ const checkoutConfig = {
     secondaryColor: "#FFDF00",
     accentColor: "#002776",
     
-    // Future Integrations & Routes
+    // Future Integrations & Contingency Links
     tiktokPixelId: "D8AAKDRC77UBL2TTR5EG",
+    invictusCheckoutFallbackUrl: "https://go.invictuspay.app.br/mpljoroel6",
     thankYouUrl: "/obrigado",
     checkoutSuccessUrl: "/checkout/success",
     pedidoConfirmadoUrl: "/pedido-confirmado"
@@ -33,32 +34,42 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Initialize Centralized Page Values & Texts
     initPageElements();
 
-    // 3. Parse Landing Page Attributes (Query Parameters)
+    // 3. Parse Landing Page Attributes (Query Parameters & UTMs)
     const urlParams = new URLSearchParams(window.location.search);
-    const sizeParam = urlParams.get('tamanho') || 'Não selecionado';
-    const nameParam = urlParams.get('nome') || 'Sem personalização';
+    const sizeParam = urlParams.get('tamanho') || 'M'; // Fallback default M
+    const nameParam = urlParams.get('nome') || ''; // Custom name (optional)
 
     document.getElementById('summary-size').textContent = sizeParam;
-    document.getElementById('summary-name').textContent = nameParam;
+    document.getElementById('summary-name').textContent = nameParam ? nameParam : 'Sem personalização';
 
-    // 4. Trigger TikTok Pixel InitiateCheckout Event on Page Load
+    // 4. Capture UTM Parameters
+    const trackingParams = {
+        src: urlParams.get('src') || "",
+        utm_source: urlParams.get('utm_source') || "",
+        utm_medium: urlParams.get('utm_medium') || "",
+        utm_campaign: urlParams.get('utm_campaign') || "",
+        utm_term: urlParams.get('utm_term') || "",
+        utm_content: urlParams.get('utm_content') || ""
+    };
+
+    // 5. Trigger TikTok Pixel InitiateCheckout Event (Once per session to avoid duplicates)
     triggerInitiateCheckout(sizeParam, nameParam);
 
-    // 5. Mask Formatters for Form Inputs
+    // 6. Mask Formatters for Form Inputs
     setupMasks();
 
-    // 6. Address Auto-completion via ViaCEP
+    // 7. Address Auto-completion via ViaCEP
     setupCepSearch();
 
-    // 7. Dynamic Shipping Selection and Summary Recalculation
+    // 8. Dynamic Shipping Selection and Summary Recalculation
     let shippingCost = 0; // Default Free
     setupShippingToggle((newCost) => {
         shippingCost = newCost;
         recalculateTotal(shippingCost);
     });
 
-    // 8. Form Validation & Submission Controller
-    setupFormValidation(shippingCost, sizeParam, nameParam);
+    // 9. Form Validation & Submission Controller
+    setupFormValidation(shippingCost, sizeParam, nameParam, trackingParams);
 });
 
 /**
@@ -104,8 +115,14 @@ function formatCurrency(value) {
 
 /**
  * Trigger TikTok Pixel standard event: InitiateCheckout
+ * Avoids duplicate events within the same browsing session using sessionStorage
  */
 function triggerInitiateCheckout(size, name) {
+    if (sessionStorage.getItem('checkout_initiated') === 'true') {
+        console.log("TikTok Event InitiateCheckout skipped: Already fired in this session.");
+        return;
+    }
+
     if (typeof ttq !== 'undefined') {
         ttq.track('InitiateCheckout', {
             content_type: checkoutConfig.contentType,
@@ -121,14 +138,22 @@ function triggerInitiateCheckout(size, name) {
             value: checkoutConfig.productPrice,
             currency: checkoutConfig.currency
         });
+        sessionStorage.setItem('checkout_initiated', 'true');
         console.log("TikTok Event Triggered: InitiateCheckout");
     }
 }
 
 /**
  * Trigger TikTok Pixel standard event: AddPaymentInfo
+ * Only fired upon successful generation of Pix invoice
  */
-function triggerAddPaymentInfo(totalValue, size, name) {
+function triggerAddPaymentInfo(totalValue, size, name, transactionId) {
+    // Avoid duplicate AddPaymentInfo for the same transaction
+    if (sessionStorage.getItem(`payment_info_fired_${transactionId}`) === 'true') {
+        console.log("TikTok Event AddPaymentInfo skipped: Already fired for this transaction.");
+        return;
+    }
+
     if (typeof ttq !== 'undefined') {
         ttq.track('AddPaymentInfo', {
             content_type: checkoutConfig.contentType,
@@ -145,32 +170,17 @@ function triggerAddPaymentInfo(totalValue, size, name) {
             currency: checkoutConfig.currency,
             payment_method: "pix"
         });
+        sessionStorage.setItem(`payment_info_fired_${transactionId}`, 'true');
         console.log("TikTok Event Triggered: AddPaymentInfo");
     }
 }
 
 /**
- * [PLACEHOLDER] Prepared trigger for future server-side / client-side Purchase event
- * Do NOT trigger this function in any frontend clicks now. To be called futher by backend webhooks.
+ * Prepared trigger for future server-side / client-side Purchase event
  */
 function trackPurchase(orderData) {
-    /* 
-    if (typeof ttq !== 'undefined') {
-        ttq.track('CompletePayment', {
-            content_type: checkoutConfig.contentType,
-            contents: [{
-                content_id: checkoutConfig.contentId,
-                content_name: checkoutConfig.productName,
-                price: checkoutConfig.productPrice,
-                quantity: 1
-            }],
-            value: orderData.total,
-            currency: checkoutConfig.currency,
-            order_id: orderData.id
-        });
-    }
-    */
-    console.log("Future Purchase tracking endpoint prepared: ", orderData);
+    // Deprecated client-side trigger to prevent invalid conversion triggers on frontend
+    console.log("Future Purchase tracking endpoint prepared:", orderData);
 }
 
 /**
@@ -228,7 +238,6 @@ function setupCepSearch() {
     const stateInput = document.getElementById('state');
     const numberInput = document.getElementById('number');
 
-    // Add CEP formatting mask: 00000-000
     cepInput.addEventListener('input', (e) => {
         let value = e.target.value.replace(/\D/g, "");
         if (value.length > 8) value = value.slice(0, 8);
@@ -237,7 +246,6 @@ function setupCepSearch() {
         }
         e.target.value = value;
 
-        // Auto triggers query when clean length is 8
         const cleanCep = value.replace(/\D/g, "");
         if (cleanCep.length === 8) {
             fetchAddress(cleanCep);
@@ -256,16 +264,12 @@ function setupCepSearch() {
             if (data.erro) {
                 showCepError("CEP não encontrado. Verifique e tente novamente.");
             } else {
-                // Prefill fields
                 streetInput.value = data.logradouro || "";
                 neighborhoodInput.value = data.bairro || "";
                 cityInput.value = data.localidade || "";
                 stateInput.value = data.uf || "";
                 
-                // Clear any errors
                 clearFieldErrors([streetInput, neighborhoodInput, cityInput, stateInput]);
-                
-                // Set focus on number input for high completion rate
                 numberInput.focus();
             }
         } catch (error) {
@@ -280,7 +284,6 @@ function setupCepSearch() {
         errorCep.style.display = "block";
         cepInput.classList.add('input-error');
         
-        // Clean fields in case of query fail
         streetInput.value = "";
         neighborhoodInput.value = "";
         cityInput.value = "";
@@ -330,18 +333,15 @@ function setupShippingToggle(onUpdate) {
 /**
  * Setup field validators on submit and blur events
  */
-function setupFormValidation(shippingCost, size, name) {
+function setupFormValidation(shippingCost, size, name, tracking) {
     const form = document.getElementById('checkout-form');
-    const submitBtn = document.getElementById('submit-btn-checkout');
-    
-    // Bind Real-time validation on Blur for premium feel
     const inputsToValidate = ['full-name', 'cpf', 'phone', 'email', 'cep', 'street', 'number', 'neighborhood', 'city', 'state'];
+    
     inputsToValidate.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
             el.addEventListener('blur', () => validateField(el));
             el.addEventListener('input', () => {
-                // Clean errors on typing to be user friendly
                 if (el.classList.contains('input-error')) {
                     validateField(el);
                 }
@@ -361,9 +361,8 @@ function setupFormValidation(shippingCost, size, name) {
         });
 
         if (isFormValid) {
-            processPayment(shippingCost, size, name);
+            processPayment(shippingCost, size, name, tracking);
         } else {
-            // Scroll to the first error smoothly
             const firstError = document.querySelector('.input-error');
             if (firstError) {
                 firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -469,7 +468,6 @@ function validateField(input) {
  * Performs raw CPF digit verification
  */
 function validateCpfChecksum(cpf) {
-    // Check known repeating patterns
     if (/^(\d)\1{10}$/.test(cpf)) return false;
     
     let sum = 0;
@@ -494,9 +492,9 @@ function validateCpfChecksum(cpf) {
 }
 
 /**
- * Handles the payment compilation, simulation loading states, and TikTok pixel AddPaymentInfo event
+ * Handles the payment compilation, loader triggers, fetch calls to serverless API, error rendering, and Plan B fallback
  */
-function processPayment(shippingCost, size, name) {
+function processPayment(shippingCost, size, name, tracking) {
     const submitBtn = document.getElementById('submit-btn-checkout');
     const overlay = document.getElementById('payment-overlay');
     const statusTitle = document.getElementById('overlay-status-title');
@@ -504,30 +502,29 @@ function processPayment(shippingCost, size, name) {
     
     const finalTotal = checkoutConfig.productPrice + shippingCost;
 
-    // 1. Disable submit and trigger loading visual
+    // 1. Trigger Loading visually
     submitBtn.classList.add('disabled-loader');
     submitBtn.disabled = true;
-    submitBtn.querySelector('span').textContent = "PROCESSANDO...";
+    submitBtn.querySelector('span').textContent = "GERANDO SEU PIX...";
     
-    // Open full overlay
     overlay.classList.add('active');
     statusTitle.style.display = "block";
     statusTitle.textContent = "Gerando seu pagamento PIX...";
     simulatedSuccess.style.display = "none";
+    const simulatedError = document.getElementById('pix-mock-error');
+    if (simulatedError) simulatedError.style.display = "none";
+    document.querySelector('.payment-loader-spinner').style.display = "block";
 
-    // 2. Trigger TikTok Pixel Event: AddPaymentInfo
-    triggerAddPaymentInfo(finalTotal, size, name);
-
-    // 3. Assemble complete customer details
+    // 2. Compile Customer and Address Details
     const customerData = {
         name: document.getElementById('full-name').value.trim(),
-        cpf: document.getElementById('cpf').value.replace(/\D/g, ""),
+        cpf: document.getElementById('cpf').value,
         email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phone').value.replace(/\D/g, "")
+        phone: document.getElementById('phone').value
     };
 
     const addressData = {
-        cep: document.getElementById('cep').value.replace(/\D/g, ""),
+        cep: document.getElementById('cep').value,
         street: document.getElementById('street').value.trim(),
         number: document.getElementById('number').value.trim(),
         complement: document.getElementById('complement').value.trim(),
@@ -545,62 +542,131 @@ function processPayment(shippingCost, size, name) {
         nameCustom: name
     };
 
-    // 4. Execute Invictus Pay integration gateway placeholder
-    createPixPayment(customerData, addressData, orderData)
+    // 3. Make real fetch request to Serverless Endpoint
+    createPixPayment(customerData, addressData, orderData, tracking)
         .then((paymentResponse) => {
-            // After successful response simulation (e.g. 2.5 seconds)
+            // Success handler
             statusTitle.style.display = "none";
             document.querySelector('.payment-loader-spinner').style.display = "none";
             
-            // Show QR code simulated screen
+            // Show Success UI
             simulatedSuccess.style.display = "block";
-            
-            // Generate timer countdown
+
+            // Configure Timer Regressor
             startPixTimer(15 * 60, document.getElementById('pix-timer-val'));
-            
-            // Configure Copy-Paste button
+
+            // Configure Pix code output dynamically
+            const pixCodeField = document.getElementById('pix-code-field');
+            const visualQrCode = document.querySelector('.simulated-qr');
+
+            // Fallback Plan: if Pix Code text is returned, generate image tag
+            if (paymentResponse.pixCode) {
+                pixCodeField.value = paymentResponse.pixCode;
+                
+                // Call light zero-dependency QR Code generator API to render visual QR Code
+                const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(paymentResponse.pixCode)}`;
+                visualQrCode.innerHTML = `<img src="${qrImageUrl}" alt="PIX QR Code" style="width: 100%; height: 100%; object-fit: contain;">`;
+            } else if (paymentResponse.paymentUrl) {
+                // If only url is returned, change screen to Pagar Agora button
+                pixCodeField.value = paymentResponse.paymentUrl;
+                visualQrCode.innerHTML = `
+                    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; width:100%; gap:10px;">
+                        <a href="${paymentResponse.paymentUrl}" target="_blank" class="btn-checkout-close" style="background-color:#32bcad; text-decoration:none; display:flex; align-items:center; justify-content:center; font-size:0.9rem;">
+                            ABRIR CHECOUT INVICTUS 💳
+                        </a>
+                    </div>
+                `;
+            } else {
+                // Contingency fallback
+                pixCodeField.value = checkoutConfig.invictusCheckoutFallbackUrl;
+                visualQrCode.innerHTML = `
+                    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; width:100%; gap:10px;">
+                        <a href="${checkoutConfig.invictusCheckoutFallbackUrl}" target="_blank" class="btn-checkout-close" style="background-color:#32bcad; text-decoration:none; display:flex; align-items:center; justify-content:center; font-size:0.9rem;">
+                            PAGAR NO CHECKOUT SEGURO 🏆
+                        </a>
+                    </div>
+                `;
+            }
+
+            // Configure Copy-Paste Actions
             setupCopyPasteBtn();
 
-            // Configure Close buttons
+            // Trigger TikTok conversion: AddPaymentInfo
+            triggerAddPaymentInfo(finalTotal, size, name, paymentResponse.transactionId);
+
+            // Configure overlay close
             const closeBtn = document.getElementById('overlay-close-btn');
             closeBtn.onclick = () => {
-                // Restore form submit button
                 submitBtn.classList.remove('disabled-loader');
                 submitBtn.disabled = false;
                 submitBtn.querySelector('span').textContent = "FINALIZAR COMPRA VIA PIX";
                 document.querySelector('.payment-loader-spinner').style.display = "block";
-                
-                // Hide Overlay
                 overlay.classList.remove('active');
             };
         })
         .catch((error) => {
-            alert("Ocorreu um erro ao processar. Tente novamente.");
-            overlay.classList.remove('active');
+            // Handle error and render user-friendly message
+            console.error("[Checkout Frontend Payment Fail]:", error);
+            
+            statusTitle.style.display = "none";
+            document.querySelector('.payment-loader-spinner').style.display = "none";
+            
+            // Map friendly UI messages depending on status code
+            let userFriendlyMsg = "Não foi possível gerar o PIX agora. Verifique seus dados e tente novamente.";
+            const statusCode = error.statusCode;
+
+            if (statusCode === 400 || statusCode === 422) {
+                userFriendlyMsg = "Algum dado está incorreto. Verifique CPF, e-mail e telefone.";
+            } else if (statusCode === 401) {
+                userFriendlyMsg = "Erro de autenticação na integração de pagamento. Verifique o token da Invictus Pay.";
+            } else if (statusCode === 500) {
+                userFriendlyMsg = "Instabilidade temporária ao gerar o pagamento. Tente novamente em alguns instantes.";
+            }
+
+            // Show error container, hide success container
+            const simulatedError = document.getElementById('pix-mock-error');
+            document.getElementById('pix-error-desc').textContent = userFriendlyMsg;
+            
+            simulatedSuccess.style.display = "none";
+            simulatedError.style.display = "block";
+
+            // Reset Form submit button state
             submitBtn.classList.remove('disabled-loader');
             submitBtn.disabled = false;
             submitBtn.querySelector('span').textContent = "FINALIZAR COMPRA VIA PIX";
+
+            const errorCloseBtn = document.getElementById('overlay-error-close-btn');
+            errorCloseBtn.onclick = () => {
+                overlay.classList.remove('active');
+            };
         });
 }
 
 /**
- * [GATEWAY INTEGRATION] Placeholder function prepared for future Invictus Pay API connection
- * Securely designed: This function executes client-side triggers, while private API integrations will be done server-side.
+ * Communicates with our secure Serverless Backend route
  */
-async function createPixPayment(customer, address, order) {
-    console.log("Future Gateway Invictus Pay Integration details compiled securely: ", { customer, address, order });
-    
-    // Simulate standard HTTP post payload latency (2500ms)
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve({
-                status: "success",
-                pix_copia_cola: "00020101021226830014br.gov.bcb.pix2561api.invictuspay.com.br/v2/cob/D8AAKDRC77UBL2TTR5EG3406ba434f1caa05bfa1e90fe28",
-                qrcode_visual: "https://kitselecaobrasileira.shop/checkout/simulated-qrcode-visual.png",
-                order_id: "ORD-" + Math.floor(Math.random() * 1000000)
-            });
-        }, 2200);
+async function createPixPayment(customer, address, order, tracking) {
+    const response = await fetch('../api/create-pix-payment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            customer,
+            address,
+            shipping_method: order.shipping === 0 ? 'free' : 'fast',
+            tracking
+        })
     });
+
+    const responseData = await response.json();
+    if (!response.ok) {
+        const err = new Error(responseData.error || 'Failed to process payment');
+        err.statusCode = response.status;
+        err.details = responseData;
+        throw err;
+    }
+    return responseData;
 }
 
 /**
@@ -612,16 +678,19 @@ function setupCopyPasteBtn() {
     
     copyBtn.addEventListener('click', () => {
         codeInput.select();
-        codeInput.setSelectionRange(0, 99999); // For mobile devices
+        codeInput.setSelectionRange(0, 99999);
         
         navigator.clipboard.writeText(codeInput.value)
             .then(() => {
                 copyBtn.textContent = "COPIADO! ✓";
-                copyBtn.style.backgroundColor = "#22c55e"; // Success green
+                copyBtn.style.backgroundColor = "#22c55e";
+                
+                // Show floating visual indicator
+                console.log("Código PIX copiado com sucesso!");
                 
                 setTimeout(() => {
                     copyBtn.textContent = "COPIAR CÓDIGO";
-                    copyBtn.style.backgroundColor = "#32bcad"; // Default turquoise
+                    copyBtn.style.backgroundColor = "#32bcad";
                 }, 2000);
             })
             .catch(() => {
@@ -639,10 +708,7 @@ function startPixTimer(duration, display) {
         minutes = parseInt(timer / 60, 10);
         seconds = parseInt(timer % 60, 10);
 
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        display.textContent = minutes + ":" + seconds;
+        display.textContent = (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
 
         if (--timer < 0) {
             clearInterval(interval);
@@ -652,7 +718,9 @@ function startPixTimer(duration, display) {
     
     // Clear interval when closing the modal to prevent leaks
     const closeBtn = document.getElementById('overlay-close-btn');
-    closeBtn.addEventListener('click', () => {
-        clearInterval(interval);
-    });
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            clearInterval(interval);
+        });
+    }
 }

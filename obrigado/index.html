@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obrigado pelo seu Pedido | Kit Copa Completo</title>
+    <link href="../assets/favicon.ico" rel="icon" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-primary: #009739;
+            --color-secondary: #FFDF00;
+            --color-accent: #002776;
+            --color-dark: #0f172a;
+            --color-light: #f8fafc;
+            --color-white: #ffffff;
+            --font-headers: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--color-dark);
+            font-family: var(--font-body);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: var(--color-white);
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 3px solid var(--color-primary);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-family: var(--font-headers);
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--color-primary);
+        }
+
+        .logo span {
+            color: var(--color-accent);
+        }
+
+        .main {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .card {
+            background-color: var(--color-white);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 550px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #007236 100%);
+            color: var(--color-white);
+            font-size: 2rem;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 4px 10px rgba(0, 151, 57, 0.3);
+        }
+
+        h1 {
+            font-family: var(--font-headers);
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        p {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .order-info {
+            background-color: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+            padding-top: 10px;
+            border-top: 1px solid #e2e8f0;
+            font-weight: 700;
+            color: var(--color-dark);
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #eab308 0%, #d4af37 100%);
+            color: var(--color-accent);
+            text-decoration: none;
+            font-family: var(--font-headers);
+            font-size: 1.1rem;
+            font-weight: 900;
+            padding: 14px 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(234, 179, 8, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(234, 179, 8, 0.4);
+            filter: brightness(1.05);
+        }
+
+        .footer {
+            background-color: var(--color-dark);
+            color: #94a3b8;
+            font-size: 0.75rem;
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">🏆 Kit<span>da Copa do Mundo</span></div>
+    </header>
+
+    <main class="main">
+        <div class="card">
+            <div class="success-icon">✓</div>
+            <h1>Pedido Recebido!</h1>
+            <p>Seu pagamento PIX está sendo processado. A confirmação é enviada automaticamente para o seu e-mail em alguns instantes.</p>
+
+            <div class="order-info">
+                <div class="info-row">
+                    <span>Produto</span>
+                    <strong>Kit Copa Completo</strong>
+                </div>
+                <div class="info-row">
+                    <span>Método de Pagamento</span>
+                    <strong>PIX</strong>
+                </div>
+                <div class="info-row">
+                    <span>Status</span>
+                    <span style="color: #eab308; font-weight: 700;">Aguardando Confirmação</span>
+                </div>
+                <div class="info-row" style="margin-top:10px;">
+                    <span>Total</span>
+                    <strong id="display-total">R$ 69,90</strong>
+                </div>
+            </div>
+
+            <!-- TODO: Add dynamic server confirmation checking scripts -->
+            <!-- Future CompletePayment / Purchase pixel event code will fire here when status resolves to PAID -->
+
+            <a href="../index.html" class="btn">VOLTAR PARA A LOJA</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Kit Torcedor 2026. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Stub: Display total from sessionStorage if it exists
+        const lastOrder = localStorage.getItem('last_order_total');
+        if (lastOrder) {
+            document.getElementById('display-total').textContent = lastOrder;
+        }
+    </script>
+</body>
+</html>
