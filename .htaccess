@@ -1,0 +1,47 @@
+# ==============================================================================
+# CONFIGURAÇÃO DE SEGURANÇA E ROTEAMENTO - TORCEDOR 2026
+# Otimizado para Hostinger (Apache/LiteSpeed)
+# ==============================================================================
+
+RewriteEngine On
+RewriteBase /
+
+# 1. Roteamento de APIs sem Redirecionamento 301 (Previne conversão de POST em GET)
+# Sempre roteia as chamadas limpas diretamente para os respectivos arquivos index.php
+
+# Roteia '/api/create-pix-payment' para '/api/create-pix-payment/index.php'
+RewriteRule ^api/create-pix-payment$ api/create-pix-payment/index.php [L]
+RewriteRule ^api/create-pix-payment/$ api/create-pix-payment/index.php [L]
+
+# Roteia '/api/invictus-webhook' para '/api/invictus-webhook/index.php'
+RewriteRule ^api/invictus-webhook$ api/invictus-webhook/index.php [L]
+RewriteRule ^api/invictus-webhook/$ api/invictus-webhook/index.php [L]
+
+# 2. Segurança: Impedir visualização direta de arquivos sensíveis
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.log">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# 3. Compactação Gzip para Carregamento Ultrarrápido (Aesthetics & Performance)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json application/xml
+</IfModule>
+
+# 4. Cache do Navegador para Recursos Estáticos (Assets & Imagens)
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType text/javascript "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+</IfModule>
