@@ -1,5 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // 0. TikTok and Google Analytics ViewContent Event on Page Load
+    if (typeof ttq !== 'undefined') {
+        ttq.track('ViewContent', {
+            content_type: 'product',
+            contents: [{
+                content_id: '3034942483418',
+                content_name: 'Kit Torcida Brasil 2026',
+                price: 69.90,
+                quantity: 1,
+                currency: 'BRL'
+            }]
+        });
+    }
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'view_item', {
+            currency: 'BRL',
+            value: 69.90,
+            items: [{
+                item_id: '3034942483418',
+                item_name: 'Kit Torcida Brasil 2026',
+                price: 69.90,
+                quantity: 1
+            }]
+        });
+    }
+
     // 1. Intersection Observer for Scroll Animations
     const observerOptions = {
         root: null,
@@ -50,9 +76,83 @@ document.addEventListener('DOMContentLoaded', () => {
             checkoutBtn.classList.remove('disabled');
             checkoutBtn.textContent = 'FINALIZAR COMPRA AGORA';
             
-            // Add click event to checkout that directs to the Shopify store
-            checkoutBtn.onclick = () => {
-                window.location.href = 'https://seguro.torcedor2026.com.br/api/assets/shopify?product=3034942483418&store=30349';
+            // Trigger TikTok AddToCart event
+            if (typeof ttq !== 'undefined') {
+                ttq.track('AddToCart', {
+                    content_type: 'product',
+                    contents: [{
+                        content_id: '3034942483418',
+                        content_name: 'Kit Torcida Brasil 2026',
+                        price: 69.90,
+                        quantity: 1,
+                        currency: 'BRL',
+                        size: selectedSize
+                    }]
+                });
+            }
+            
+            // Trigger Google Analytics AddToCart event
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'add_to_cart', {
+                    currency: 'BRL',
+                    value: 69.90,
+                    items: [{
+                        item_id: '3034942483418',
+                        item_name: 'Kit Torcida Brasil 2026',
+                        price: 69.90,
+                        quantity: 1,
+                        item_size: selectedSize
+                    }]
+                });
+            }
+            
+            // Add click event to checkout that directs to the Shopify store with tracking
+            checkoutBtn.onclick = (event) => {
+                event.preventDefault();
+                
+                const nameValue = nameInput ? nameInput.value : '';
+                
+                // Trigger TikTok InitiateCheckout event
+                if (typeof ttq !== 'undefined') {
+                    ttq.track('InitiateCheckout', {
+                        content_type: 'product',
+                        contents: [{
+                            content_id: '3034942483418',
+                            content_name: 'Kit Torcida Brasil 2026',
+                            price: 69.90,
+                            quantity: 1,
+                            currency: 'BRL',
+                            size: selectedSize,
+                            name_customization: nameValue
+                        }],
+                        value: 69.90,
+                        currency: 'BRL'
+                    });
+                }
+                
+                // Trigger Google Analytics BeginCheckout event
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'begin_checkout', {
+                        currency: 'BRL',
+                        value: 69.90,
+                        items: [{
+                            item_id: '3034942483418',
+                            item_name: 'Kit Torcida Brasil 2026',
+                            price: 69.90,
+                            quantity: 1,
+                            item_size: selectedSize,
+                            item_customization: nameValue
+                        }]
+                    });
+                }
+                
+                // Build checkout URL with parameters
+                const checkoutUrl = `https://seguro.torcedor2026.com.br/api/assets/shopify?product=3034942483418&store=30349&tamanho=${selectedSize}&nome=${encodeURIComponent(nameValue)}&tiktok_pixel=D8AAKDRC77UBL2TTR5EG&tiktok_token=3406ba434f1caa05bfa1e90fe282a78c230509b8&pixel=D8AAKDRC77UBL2TTR5EG&token=3406ba434f1caa05bfa1e90fe282a78c230509b8`;
+                
+                // Redirect after brief delay
+                setTimeout(() => {
+                    window.location.href = checkoutUrl;
+                }, 400);
             };
         });
     });
