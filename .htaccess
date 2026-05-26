@@ -6,6 +6,11 @@
 RewriteEngine On
 RewriteBase /
 
+# Redirecionar para WWW (exceto chamadas de API para não quebrar requisições POST)
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteCond %{REQUEST_URI} !^/api/ [NC]
+RewriteRule ^(.*)$ https://www.kitselecaobrasileira.shop/$1 [R=301,L,NE]
+
 # 1. Roteamento de APIs sem Redirecionamento 301 (Previne conversão de POST em GET)
 # Sempre roteia as chamadas limpas diretamente para os respectivos arquivos index.php
 
