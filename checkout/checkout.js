@@ -123,6 +123,8 @@ function triggerInitiateCheckout(size, name) {
         return;
     }
 
+    let fired = false;
+
     if (typeof ttq !== 'undefined') {
         ttq.track('InitiateCheckout', {
             content_type: checkoutConfig.contentType,
@@ -138,8 +140,26 @@ function triggerInitiateCheckout(size, name) {
             value: checkoutConfig.productPrice,
             currency: checkoutConfig.currency
         });
-        sessionStorage.setItem('checkout_initiated', 'true');
         console.log("TikTok Event Triggered: InitiateCheckout");
+        fired = true;
+    }
+
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'InitiateCheckout', {
+            content_type: checkoutConfig.contentType,
+            contents: [{
+                id: checkoutConfig.contentId,
+                quantity: 1
+            }],
+            value: checkoutConfig.productPrice,
+            currency: checkoutConfig.currency
+        });
+        console.log("Meta Event Triggered: InitiateCheckout");
+        fired = true;
+    }
+
+    if (fired || (typeof ttq === 'undefined' && typeof fbq === 'undefined')) {
+        sessionStorage.setItem('checkout_initiated', 'true');
     }
 }
 
@@ -152,6 +172,15 @@ function triggerAddPaymentInfo(totalValue, size, name, transactionId) {
     if (sessionStorage.getItem(`payment_info_fired_${transactionId}`) === 'true') {
         console.log("TikTok Event AddPaymentInfo skipped: Already fired for this transaction.");
         return;
+    }
+
+    // Save the total to localStorage for the thank you page to display and track Purchase
+    try {
+        const formattedTotal = totalValue.toLocaleString('pt-BR', { style: 'currency', currency: checkoutConfig.currency });
+        localStorage.setItem('last_order_total', formattedTotal);
+        console.log("Saved order total to localStorage:", formattedTotal);
+    } catch (e) {
+        console.error("Failed to save last_order_total to localStorage:", e);
     }
 
     if (typeof ttq !== 'undefined') {
@@ -170,9 +199,23 @@ function triggerAddPaymentInfo(totalValue, size, name, transactionId) {
             currency: checkoutConfig.currency,
             payment_method: "pix"
         });
-        sessionStorage.setItem(`payment_info_fired_${transactionId}`, 'true');
         console.log("TikTok Event Triggered: AddPaymentInfo");
     }
+
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'AddPaymentInfo', {
+            content_type: checkoutConfig.contentType,
+            contents: [{
+                id: checkoutConfig.contentId,
+                quantity: 1
+            }],
+            value: totalValue,
+            currency: checkoutConfig.currency
+        });
+        console.log("Meta Event Triggered: AddPaymentInfo");
+    }
+
+    sessionStorage.setItem(`payment_info_fired_${transactionId}`, 'true');
 }
 
 /**

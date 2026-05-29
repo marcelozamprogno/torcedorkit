@@ -163,6 +163,47 @@
             border-top: 1px solid #1e293b;
         }
     </style>
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)}
+    ;if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '994652929996280');
+    fbq('track', 'PageView');
+
+    // Track Purchase event on thank you page
+    try {
+        const lastOrderVal = localStorage.getItem('last_order_total');
+        let numericValue = 69.90; // Default fallback price
+        if (lastOrderVal) {
+            // Extract numeric value from string (e.g. "R$ 69,90" or "69.90")
+            const matches = lastOrderVal.replace(/[^\d,.]/g, '').replace(',', '.');
+            if (matches) {
+                const parsed = parseFloat(matches);
+                if (!isNaN(parsed) && parsed > 0) {
+                    numericValue = parsed;
+                }
+            }
+        }
+        fbq('track', 'Purchase', {
+            value: numericValue,
+            currency: 'BRL'
+        });
+        console.log('Meta Purchase event tracked with value:', numericValue);
+    } catch (e) {
+        console.error('Failed to track Meta Purchase event:', e);
+    }
+    </script>
+    <noscript>
+    <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=994652929996280&ev=PageView&noscript=1"/>
+    </noscript>
+    <!-- End Meta Pixel Code -->
 </head>
 <body>
 

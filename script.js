@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 0. TikTok and Google Analytics ViewContent Event on Page Load
+    // 0. TikTok, Meta and Google Analytics ViewContent Event on Page Load
     if (typeof ttq !== 'undefined') {
         ttq.track('ViewContent', {
             content_type: 'product',
@@ -11,6 +11,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 quantity: 1,
                 currency: 'BRL'
             }]
+        });
+    }
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'ViewContent', {
+            content_type: 'product',
+            contents: [{
+                id: 'kit-copa-completo',
+                quantity: 1
+            }],
+            value: 69.90,
+            currency: 'BRL'
         });
     }
     if (typeof gtag !== 'undefined') {
@@ -94,6 +105,19 @@ document.addEventListener('DOMContentLoaded', () => {
                             currency: 'BRL',
                             size: selectedSize,
                             name_customization: nameValue
+                        }],
+                        value: 69.90,
+                        currency: 'BRL'
+                    });
+                }
+                
+                // Trigger Meta AddToCart event
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'AddToCart', {
+                        content_type: 'product',
+                        contents: [{
+                            id: 'kit-copa-completo',
+                            quantity: 1
                         }],
                         value: 69.90,
                         currency: 'BRL'
